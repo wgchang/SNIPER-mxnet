@@ -152,10 +152,10 @@ inline void NonMaximumSuppression(float* dets,
                                   int width,
                                   int height,
                                   std::vector< std::vector<int> > & final_keep_images) {
-  
+
   int total_anchors = num_images*num_anchors*width*height;
   int chip_anchors = num_anchors*width*height;
-  
+
   float *area = new float[total_anchors];
 
   #pragma omp parallel for num_threads(8)
@@ -171,7 +171,7 @@ inline void NonMaximumSuppression(float* dets,
       sortids[j] = j;
     }
     int chip_index = i*chip_anchors;
-    std::sort(sortids.begin(), sortids.end(), 
+    std::sort(sortids.begin(), sortids.end(),
         [&dets,chip_index](int i1, int i2) {
           return dets[5*(chip_index + i1) + 4] > dets[5*(chip_index + i2) + 4];
         });
@@ -206,7 +206,7 @@ inline void NonMaximumSuppression(float* dets,
       for (int pind = j + 1; pind < max_nms; pind++) {
         if (dbuf[6*pind + 4] == -1) {
           continue;
-        } 
+        }
         float xx1 = std::max(ix1, dbuf[6*pind]);
         float yy1 = std::max(iy1, dbuf[6*pind + 1]);
         float xx2 = std::min(ix2, dbuf[6*pind + 2]);
@@ -264,7 +264,7 @@ class MultiProposalOp : public Operator{
     //std::cout << "quack 2" << std::endl;
     //total number of anchors in a batch
     int total_anchors = count_anchors * num_images;
-    
+
     float *proposals = new float[total_anchors*5];
     float *im_info = new float[num_images*3];
 
